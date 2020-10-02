@@ -47,16 +47,6 @@ router.post('/', async (req, res) => {
 
 //add user completed exam and score
 router.post('/addCompletedExams', async (req, res) => {
-//   await User.findOneAndUpdate({ _id: req.body.id },
-//   { $addToSet: { 
-//     completedExams: {
-//           exam: req.body.exam,
-//           score: req.body.score
-//       }
-     
-//     } 
-// }
-//   );
   var conditions = {
     _id: req.body.id,
     'completedExams.exam': { $ne: req.body.exam }
@@ -73,7 +63,7 @@ router.post('/addCompletedExams', async (req, res) => {
   res.send('success');
 });
 
-//add user completed exam and score
+//update score for existed exam
 router.post('/updateScore', async (req, res) => {
   
     await User.findOneAndUpdate({ _id: req.body.id, 'completedExams._id': req.body.examId },{ 
@@ -102,6 +92,17 @@ router.get('/examId', async function(req, res) {
 } catch (error) {
     return res.status(500).json({"error":error});
 }
+
+});
+
+//get all user scores for a particular exam
+router.get('/examScores', async function(req, res) {
+const allScores = User.find(req.query).sort({'completedExams.score': -1, 'completedExams.updatedAt': -1}).select({'completedExams.$': 1, name: 1}).limit(5).exec(
+  function(err, allScores) {
+    if (err) res.status(500).send(err);
+
+    res.json(allScores);
+  });
 });
 
 module.exports = router;

@@ -25,9 +25,15 @@ const userSchema = new mongoose.Schema({
     },
     completedExams: [
         {
-            exam: String,
-            score: String,
-            createdAt: {type: Date, default: Date.now}
+            type: new mongoose.Schema(
+                {
+                    exam: String,
+                    score: Number
+                },
+                {
+                    timestamps: true
+                }
+            )
         }
     ]
 });
