@@ -3,6 +3,11 @@ const jwt = require('jsonwebtoken');
 const Joi = require('joi');
 const mongoose = require('mongoose');
 
+const completedExamsSchema = new mongoose.Schema({
+    exam: String,
+    score: Number,
+    createdAt: {type: Date, default: Date.now}
+});
 const userSchema = new mongoose.Schema({
     name: {
         type: String,
@@ -23,19 +28,7 @@ const userSchema = new mongoose.Schema({
         minlength: 8,
         maxlength: 1024
     },
-    completedExams: [
-        {
-            type: new mongoose.Schema(
-                {
-                    exam: String,
-                    score: Number
-                },
-                {
-                    timestamps: true
-                }
-            )
-        }
-    ]
+    completedExams: [completedExamsSchema]
 });
 
 userSchema.methods.generateLoginToken = function() {

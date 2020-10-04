@@ -8,6 +8,7 @@ router.post('/', async (req, res) => {
     const question = new Question({
         description: req.body.description,
         examName: req.body.examName,
+        bcsName: req.body.bcsName,
         subject: req.body.subject,
         alternatives: req.body.alternatives
     });

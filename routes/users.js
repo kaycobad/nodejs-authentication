@@ -81,7 +81,22 @@ router.post('/updateScore', async (req, res) => {
 
   });
   });
-
+// get user completed all exams
+router.get('/completedExams', async function(req, res) {
+  try {
+    //const completedExam = await User.findOne(req.query).sort({'completedExams.createdAt': -1}).select({'completedExams.score': 1, 'completedExams.exam': 1});
+    const id = req.query._id;
+    const completedExam = await User.aggregate([
+      {$match: {"_id": mongoose.Types.ObjectId(id)}},
+      {$unwind: "$completedExams"},
+      {$sort: {"completedExams.createdAt": -1}},
+      {$project:{"completedExams.createdAt": 1, "completedExams.exam": 1, "completedExams.score": 1, "_id": 0}}
+  ]);
+    return res.status(200).json(completedExam);
+} catch (error) {
+    return res.status(500).json({"error":error});
+}
+});
 //get examId
 router.get('/examId', async function(req, res) {
   try {
@@ -97,12 +112,12 @@ router.get('/examId', async function(req, res) {
 
 //get all user scores for a particular exam
 router.get('/examScores', async function(req, res) {
-const allScores = User.find(req.query).sort({'completedExams.score': -1, 'completedExams.updatedAt': -1}).select({'completedExams.$': 1, name: 1}).limit(5).exec(
+const allScores = User.find(req.query).sort({'completedExams.score': -1}).select({'completedExams.$': 1, name: 1}).limit(5).exec(
   function(err, allScores) {
     if (err) res.status(500).send(err);
-
     res.json(allScores);
   });
+
 });
 
 module.exports = router;

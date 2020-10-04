@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const questionSchema = new mongoose.Schema({
     description: String,
     examName: String,
+    bcsName: String,
     subject: String,
     alternatives: [
         {
