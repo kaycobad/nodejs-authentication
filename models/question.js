@@ -5,6 +5,7 @@ const questionSchema = new mongoose.Schema({
     examName: String,
     bcsName: String,
     subject: String,
+    explanation: String,
     alternatives: [
         {
             text: {

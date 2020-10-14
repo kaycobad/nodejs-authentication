@@ -84,7 +84,6 @@ router.post('/updateScore', async (req, res) => {
 // get user completed all exams
 router.get('/completedExams', async function(req, res) {
   try {
-    //const completedExam = await User.findOne(req.query).sort({'completedExams.createdAt': -1}).select({'completedExams.score': 1, 'completedExams.exam': 1});
     const id = req.query._id;
     const completedExam = await User.aggregate([
       {$match: {"_id": mongoose.Types.ObjectId(id)}},
@@ -112,7 +111,8 @@ router.get('/examId', async function(req, res) {
 
 //get all user scores for a particular exam
 router.get('/examScores', async function(req, res) {
-const allScores = User.find(req.query).sort({'completedExams.score': -1}).select({'completedExams.$': 1, name: 1}).limit(5).exec(
+
+const allScores = User.find(req.query).sort({'completedExams.score': -1, 'completedExams.createdAt': -1}).select({'completedExams.$': 1, name: 1}).limit(5).exec(
   function(err, allScores) {
     if (err) res.status(500).send(err);
     res.json(allScores);

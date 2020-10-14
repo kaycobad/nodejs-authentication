@@ -7,7 +7,8 @@ const router = express.Router();
 router.post('/', async (req, res) => {
     const exam = new Exam({
         title: req.body.title,
-        subTitle: req.body.subTitle
+        subTitle: req.body.subTitle,
+        marks: req.body.marks
     });
 
     await exam.save();
@@ -18,10 +19,10 @@ router.post('/', async (req, res) => {
 
 //get all exam names
 router.get('/allExams', async (req, res) => {
-    var perPage = 10
+    var perPage = 20
   var page = req.query.page
     try {
-        const exams = await Exam.find({}).skip((perPage * page) - perPage).limit(perPage).sort({createdAt: -1}).select({title: 1, subTitle: 1, _id: 0});
+        const exams = await Exam.find({}).skip((perPage * page) - perPage).limit(perPage).sort({createdAt: -1}).select({title: 1, subTitle: 1, marks: 1, _id: 0});
         return res.status(200).json(exams);
     } catch (error) {
         return res.status(500).json({"error":error});
